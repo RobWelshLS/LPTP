@@ -1,4 +1,5 @@
 # Python IDE and compiled/cache files
 .idea/
 __pycache__/
+/venv
 
