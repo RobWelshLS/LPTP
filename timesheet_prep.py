@@ -5,11 +5,12 @@ lp_export = []
 with open('Sample LP export.csv', encoding='utf-8-sig') as lp_export_file:
     time_entries_dict = csv.DictReader(lp_export_file)
     for row in time_entries_dict:
-        lp_export.append(row)
-
-new_dict = {}
+        lp_export.append(dict(row))
+test_value = lp_export[0].get('Company')
 
 print(lp_export[0])
+
+new_dict = {}
 
 new_dict['Company'] = lp_export[0].get('Company')
 emp_num = lp_export[0].get('person_reference')
