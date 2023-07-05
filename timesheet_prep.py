@@ -3,10 +3,11 @@ import csv
 lp_export = []
 
 # Read LiquidPlanner export file into a list
-with open('Sample LP export.csv', encoding='utf-8-sig') as lp_export_file:
-    time_entries_dict = csv.DictReader(lp_export_file)
-    for row in time_entries_dict:
-        lp_export.append(dict(row))
+def read_export_file():
+    with open('Sample LP export.csv', encoding='utf-8-sig') as lp_export_file:
+        time_entries_dict = csv.DictReader(lp_export_file)
+        for row in time_entries_dict:
+            lp_export.append(dict(row))
 
 # Define import fields
 fields = ['Company', 'EmployeeNum', 'LaborTypePseudo', 'IndirectCode', 'LaborHrs', 'BurdenHrs', 'LaborNote',
@@ -74,10 +75,40 @@ def create_import_lists(export_list):
     return westerville_import, woburn_import
 
 
-import_lists = create_import_lists(lp_export)
+def write_westerville_file():
+    if len(westerville_import_list) > 0:
+        with open('westerville_import.csv', 'w', newline='') as westerville_import_csv:
+            log_writer = csv.DictWriter(westerville_import_csv, fieldnames=fields)
 
-westerville_import_list = import_lists[0]
-woburn_import_list = import_lists[1]
+            log_writer.writeheader()
+            for entry in westerville_import_list:
+                log_writer.writerow(entry)
+
+
+# Write Woburn import file
+def write_woburn_file():
+    if len(woburn_import_list) > 0:
+        with open('woburn_import.csv', 'w', newline='') as woburn_import_csv:
+            log_writer = csv.DictWriter(woburn_import_csv, fieldnames=fields)
+
+            log_writer.writeheader()
+            for entry in woburn_import_list:
+                log_writer.writerow(entry)
+
+
+# temporary
+westerville_import_list = []
+woburn_import_list = []
+
+# Create the lists
+# import_lists = create_import_lists(lp_export)
+# westerville_import_list = import_lists[0]
+# woburn_import_list = import_lists[1]
+
+
+# Create the files
+# write_westerville_file()
+# write_woburn_file()
 
 # Test prints, to be deleted
 # print(f"\nThis is the Westerville import list. The length is {len(westerville_import_list)} entries:")
@@ -89,19 +120,7 @@ woburn_import_list = import_lists[1]
 #     print(row)
 
 # Write Westerville import file
-if len(westerville_import_list) > 0:
-    with open('westerville_import.csv', 'w', newline='') as westerville_import_csv:
-        log_writer = csv.DictWriter(westerville_import_csv, fieldnames=fields)
 
-        log_writer.writeheader()
-        for entry in westerville_import_list:
-            log_writer.writerow(entry)
-
-# Write Woburn import file
-if len(woburn_import_list) > 0:
-    with open('woburn_import.csv', 'w', newline='') as woburn_import_csv:
-        log_writer = csv.DictWriter(woburn_import_csv, fieldnames=fields)
-
-        log_writer.writeheader()
-        for entry in woburn_import_list:
-            log_writer.writerow(entry)
+# Simple test function
+def add_two(num1, num2):
+    return num1 + num2
