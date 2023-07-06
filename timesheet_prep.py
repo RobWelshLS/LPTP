@@ -1,13 +1,15 @@
 import csv
 
-lp_export = []
 
 # Read LiquidPlanner export file into a list
-def read_export_file():
-    with open('Sample LP export.csv', encoding='utf-8-sig') as lp_export_file:
+def read_export_file(export_file):
+    lp_export_list = []
+    with open(export_file, encoding='utf-8-sig') as lp_export_file:
         time_entries_dict = csv.DictReader(lp_export_file)
         for row in time_entries_dict:
-            lp_export.append(dict(row))
+            lp_export_list.append(dict(row))
+    return lp_export_list
+
 
 # Define import fields
 fields = ['Company', 'EmployeeNum', 'LaborTypePseudo', 'IndirectCode', 'LaborHrs', 'BurdenHrs', 'LaborNote',
@@ -15,8 +17,12 @@ fields = ['Company', 'EmployeeNum', 'LaborTypePseudo', 'IndirectCode', 'LaborHrs
           'ResourceID', 'OkToChangeResourceGrpID']
 
 
-# Build the Epicor import list(s) from the LiquidPlanner export list
+def verify_export_fields():
+    pass
+
+
 def create_import_lists(export_list):
+    """Build the Epicor import list(s) from the LiquidPlanner export list"""
     westerville_import = []
     woburn_import = []
 
@@ -43,7 +49,7 @@ def create_import_lists(export_list):
         new_dict[fields[3]] = indirect_code
         new_dict[fields[4]] = entry.get('hours')
 
-        # Report BurdenHrs only if Direct
+        # Report BurdenHrs only if entry contains Direct hours
         if entry.get('LaborTypePseudo') == 'J':
             new_dict[fields[5]] = entry.get('hours')
         else:
@@ -60,7 +66,13 @@ def create_import_lists(export_list):
             new_dict[fields[9]] = entry.get('PhaseID-WN')
 
         new_dict[fields[10]] = entry.get('date')
-        new_dict[fields[11]] = entry.get('activity')
+
+        # Report the PhaseOprSeq only if entry contains Direct hours
+        if entry.get('LaborTypePseudo') == 'J':
+            new_dict[fields[11]] = entry.get('activity')
+        else:
+            new_dict[fields[11]] = ""
+
         new_dict[fields[12]] = entry.get('TimeStatus')
         new_dict[fields[13]] = entry.get('OpComplete')
         new_dict[fields[14]] = employee_num
@@ -96,31 +108,24 @@ def write_woburn_file():
                 log_writer.writerow(entry)
 
 
-# temporary
-westerville_import_list = []
-woburn_import_list = []
+if __name__ == '__main__':
+    # Create the lists
+    export_list = read_export_file('Sample LP export.csv')
+    import_lists = create_import_lists(export_list)
+    westerville_import_list = import_lists[0]
+    woburn_import_list = import_lists[1]
+    for row in westerville_import_list:
+        print(row)
 
-# Create the lists
-# import_lists = create_import_lists(lp_export)
-# westerville_import_list = import_lists[0]
-# woburn_import_list = import_lists[1]
+    # Create the files
+    # write_westerville_file()
+    # write_woburn_file()
 
-
-# Create the files
-# write_westerville_file()
-# write_woburn_file()
-
-# Test prints, to be deleted
-# print(f"\nThis is the Westerville import list. The length is {len(westerville_import_list)} entries:")
-# for row in westerville_import_list:
-#     print(row)
-#
-# print(f"\nThis is the Woburn import list: The length is {len(woburn_import_list)} entries:")
-# for row in woburn_import_list:
-#     print(row)
-
-# Write Westerville import file
-
-# Simple test function
-def add_two(num1, num2):
-    return num1 + num2
+    # Test prints, to be deleted
+    # print(f"\nThis is the Westerville import list. The length is {len(westerville_import_list)} entries:")
+    # for row in westerville_import_list:
+    #     print(row)
+    #
+    # print(f"\nThis is the Woburn import list: The length is {len(woburn_import_list)} entries:")
+    # for row in woburn_import_list:
+    #     print(row)
