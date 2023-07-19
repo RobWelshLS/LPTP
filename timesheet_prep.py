@@ -11,14 +11,24 @@ def read_export_file(export_file):
     return lp_export_list
 
 
+def verify_export_fields(export_list):
+    """Verify all required fields are present in the export list"""
+    export_fields = ['team', 'person_reference', 'Company', 'LaborTypePseudo', 'hours', 'timesheet_entry_note', 'date',
+                     'ProjectID', 'PhaseID', 'PhaseID-WN', 'activity', 'TimeStatus', 'OpComplete',
+                     'OkToChangeResourceGrpID']
+
+    for entry in export_list:
+        for field in export_fields:
+            try:
+                _ = entry[field]
+            except KeyError:
+                print(f"The LiquidPlanner export file is missing the {field} field!")
+
+
 # Define import fields
-fields = ['Company', 'EmployeeNum', 'LaborTypePseudo', 'IndirectCode', 'LaborHrs', 'BurdenHrs', 'LaborNote',
+import_fields = ['Company', 'EmployeeNum', 'LaborTypePseudo', 'IndirectCode', 'LaborHrs', 'BurdenHrs', 'LaborNote',
           'PayrollDate', 'ProjectID', 'PhaseID', 'ClockInDate', 'PhaseOprSeq', 'TimeStatus', 'OpComplete',
           'ResourceID', 'OkToChangeResourceGrpID']
-
-
-def verify_export_fields():
-    pass
 
 
 def create_import_lists(export_list):
@@ -43,40 +53,40 @@ def create_import_lists(export_list):
         indirect_code = entry.get('person_reference').split("-")[1]
 
         # Build the import list by setting the appropriate dictionary keys/values
-        new_dict[fields[0]] = entry.get('Company')
-        new_dict[fields[1]] = employee_num
-        new_dict[fields[2]] = entry.get('LaborTypePseudo')
-        new_dict[fields[3]] = indirect_code
-        new_dict[fields[4]] = entry.get('hours')
+        new_dict[import_fields[0]] = entry.get('Company')
+        new_dict[import_fields[1]] = employee_num
+        new_dict[import_fields[2]] = entry.get('LaborTypePseudo')
+        new_dict[import_fields[3]] = indirect_code
+        new_dict[import_fields[4]] = entry.get('hours')
 
         # Report BurdenHrs only if entry contains Direct hours
         if entry.get('LaborTypePseudo') == 'J':
-            new_dict[fields[5]] = entry.get('hours')
+            new_dict[import_fields[5]] = entry.get('hours')
         else:
-            new_dict[fields[5]] = '0'
+            new_dict[import_fields[5]] = '0'
 
-        new_dict[fields[6]] = entry.get('timesheet_entry_note')
-        new_dict[fields[7]] = entry.get('date')
-        new_dict[fields[8]] = entry.get('ProjectID')
+        new_dict[import_fields[6]] = entry.get('timesheet_entry_note')
+        new_dict[import_fields[7]] = entry.get('date')
+        new_dict[import_fields[8]] = entry.get('ProjectID')
 
         # Select either Westerville or Woburn PhaseID
         if westerville:
-            new_dict[fields[9]] = entry.get('PhaseID')
+            new_dict[import_fields[9]] = entry.get('PhaseID')
         elif woburn:
-            new_dict[fields[9]] = entry.get('PhaseID-WN')
+            new_dict[import_fields[9]] = entry.get('PhaseID-WN')
 
-        new_dict[fields[10]] = entry.get('date')
+        new_dict[import_fields[10]] = entry.get('date')
 
         # Report the PhaseOprSeq only if entry contains Direct hours
         if entry.get('LaborTypePseudo') == 'J':
-            new_dict[fields[11]] = entry.get('activity')
+            new_dict[import_fields[11]] = entry.get('activity')
         else:
-            new_dict[fields[11]] = ""
+            new_dict[import_fields[11]] = ""
 
-        new_dict[fields[12]] = entry.get('TimeStatus')
-        new_dict[fields[13]] = entry.get('OpComplete')
-        new_dict[fields[14]] = employee_num
-        new_dict[fields[15]] = entry.get('OkToChangeResourceGrpID')
+        new_dict[import_fields[12]] = entry.get('TimeStatus')
+        new_dict[import_fields[13]] = entry.get('OpComplete')
+        new_dict[import_fields[14]] = employee_num
+        new_dict[import_fields[15]] = entry.get('OkToChangeResourceGrpID')
 
         # If entry is for Westerville, append to Westerville import list. Else, append to Woburn.
         if westerville:
@@ -90,7 +100,7 @@ def create_import_lists(export_list):
 def write_westerville_file():
     if len(westerville_import_list) > 0:
         with open('westerville_import.csv', 'w', newline='') as westerville_import_csv:
-            log_writer = csv.DictWriter(westerville_import_csv, fieldnames=fields)
+            log_writer = csv.DictWriter(westerville_import_csv, fieldnames=import_fields)
 
             log_writer.writeheader()
             for entry in westerville_import_list:
@@ -101,7 +111,7 @@ def write_westerville_file():
 def write_woburn_file():
     if len(woburn_import_list) > 0:
         with open('woburn_import.csv', 'w', newline='') as woburn_import_csv:
-            log_writer = csv.DictWriter(woburn_import_csv, fieldnames=fields)
+            log_writer = csv.DictWriter(woburn_import_csv, fieldnames=import_fields)
 
             log_writer.writeheader()
             for entry in woburn_import_list:
@@ -111,11 +121,12 @@ def write_woburn_file():
 if __name__ == '__main__':
     # Create the lists
     export_list = read_export_file('Sample LP export.csv')
+    verify_export_fields(export_list)
     import_lists = create_import_lists(export_list)
     westerville_import_list = import_lists[0]
     woburn_import_list = import_lists[1]
-    for row in westerville_import_list:
-        print(row)
+    # for row in westerville_import_list:
+    #     print(row)
 
     # Create the files
     # write_westerville_file()
