@@ -92,10 +92,10 @@ def test_create_import_lists_all_rearranged():
 
 def test_export_field_verification():
     """Test to confirm the verify_export_fields function raises an exception if required fields are missing"""
-    export_list_missing_fields = read_export_file('LP_Export_Test_Missing')  # need to create this file
+    export_list_missing_fields = read_export_file('LP_Export_Test_Missing_Fields.csv')  # need to create this file
     with pytest.raises(KeyError) as exc_info:
         verify_export_fields(export_list_missing_fields)
-    expected = 'The LiquidPlanner export file is missing the team field!'
+    expected = 'The LiquidPlanner export file is missing the Company field!'
     assert expected in str(exc_info.value)
 
 
