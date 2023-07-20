@@ -17,12 +17,11 @@ def verify_export_fields(export_list):
                      'ProjectID', 'PhaseID', 'PhaseID-WN', 'activity', 'TimeStatus', 'OpComplete',
                      'OkToChangeResourceGrpID']
 
-    for entry in export_list:
-        for field in export_fields:
-            try:
-                _ = entry[field]
-            except KeyError:
-                print(f"The LiquidPlanner export file is missing the {field} field!")
+    for field in export_fields:
+        try:
+            _ = export_list[0][field]
+        except KeyError:
+            print(f"The LiquidPlanner export file is missing the {field} field!")
 
 
 # Define import fields

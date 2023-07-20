@@ -1,5 +1,7 @@
 import sys
 
+import pytest
+
 sys.path.append('..')
 from timesheet_prep import *
 
@@ -88,10 +90,13 @@ def test_create_import_lists_all_rearranged():
     assert import_lists[1] == import_compare_list_wn_all
 
 
-"""
-Remaining create_import_lists function tests:
+def test_export_field_verification():
+    """Test to confirm the verify_export_fields function raises an exception if required fields are missing"""
+    export_list_missing_fields = read_export_file('LP_Export_Test_Missing')  # need to create this file
+    with pytest.raises(KeyError) as exc_info:
+        verify_export_fields(export_list_missing_fields)
+    expected = 'The LiquidPlanner export file is missing the team field!'
+    assert expected in str(exc_info.value)
 
-Add error handling that confirms the export file contains all required fields.
-Write test with missing fields to ensure error handling catches error.
 
-"""
+
