@@ -90,13 +90,12 @@ def test_create_import_lists_all_rearranged():
     assert import_lists[1] == import_compare_list_wn_all
 
 
-def test_export_field_verification():
+def test_export_field_verification(capsys):
     """Test to confirm the verify_export_fields function raises an exception if required fields are missing"""
-    export_list_missing_fields = read_export_file('LP_Export_Test_Missing_Fields.csv')  # need to create this file
-    with pytest.raises(KeyError) as exc_info:
-        verify_export_fields(export_list_missing_fields)
-    expected = 'The LiquidPlanner export file is missing the Company field!'
-    assert expected in str(exc_info.value)
+    export_list_missing_fields = read_export_file('LP_Export_Test_Missing_Fields.csv')
+    verify_export_fields(export_list_missing_fields)
+    captured = capsys.readouterr()
+    assert captured.out == 'The LiquidPlanner export file is missing the Company field!\n'
 
 
 
