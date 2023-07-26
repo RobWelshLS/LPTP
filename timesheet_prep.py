@@ -1,5 +1,5 @@
 import csv
-
+from datetime import date
 
 # Read LiquidPlanner export file into a list
 def read_export_file(export_file):
@@ -96,9 +96,13 @@ def create_import_lists(export_list):
     return westerville_import, woburn_import
 
 
+today = date.today()
+
+
 def write_westerville_file():
+    wv_filename = f"LiquidPlannerTimesheetReadyForUpload{today.year}-{today.month}-{today.day}-WE.csv"
     if len(westerville_import_list) > 0:
-        with open('westerville_import.csv', 'w', newline='') as westerville_import_csv:
+        with open(wv_filename, 'w', newline='') as westerville_import_csv:
             log_writer = csv.DictWriter(westerville_import_csv, fieldnames=import_fields)
 
             log_writer.writeheader()
@@ -108,8 +112,9 @@ def write_westerville_file():
 
 # Write Woburn import file
 def write_woburn_file():
+    wn_filename = f"LiquidPlannerTimesheetReadyForUpload{today.year}-{today.month}-{today.day}-WN.csv"
     if len(woburn_import_list) > 0:
-        with open('woburn_import.csv', 'w', newline='') as woburn_import_csv:
+        with open(wn_filename, 'w', newline='') as woburn_import_csv:
             log_writer = csv.DictWriter(woburn_import_csv, fieldnames=import_fields)
 
             log_writer.writeheader()
@@ -118,18 +123,18 @@ def write_woburn_file():
 
 
 if __name__ == '__main__':
-    # Create the lists
+    # Read and verify the LP export file
     export_list = read_export_file('Sample LP export.csv')
     verify_export_fields(export_list)
+
+    # Create the import lists
     import_lists = create_import_lists(export_list)
     westerville_import_list = import_lists[0]
     woburn_import_list = import_lists[1]
-    # for row in westerville_import_list:
-    #     print(row)
 
-    # Create the files
-    # write_westerville_file()
-    # write_woburn_file()
+    # Create the Epicor import files
+    write_westerville_file()
+    write_woburn_file()
 
     # Test prints, to be deleted
     # print(f"\nThis is the Westerville import list. The length is {len(westerville_import_list)} entries:")

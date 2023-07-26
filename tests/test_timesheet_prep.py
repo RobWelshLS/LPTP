@@ -1,7 +1,5 @@
 import sys
 
-import pytest
-
 sys.path.append('..')
 from timesheet_prep import *
 
@@ -96,6 +94,3 @@ def test_export_field_verification(capsys):
     verify_export_fields(export_list_missing_fields)
     captured = capsys.readouterr()
     assert captured.out == 'The LiquidPlanner export file is missing the Company field!\n'
-
-
-
