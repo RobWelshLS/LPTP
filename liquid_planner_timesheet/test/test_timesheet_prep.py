@@ -1,7 +1,4 @@
-import sys
-
-sys.path.append('..')
-from timesheet_prep import *
+from liquid_planner_timesheet.main import *
 
 
 def read_import_compare_file(compare_file):
