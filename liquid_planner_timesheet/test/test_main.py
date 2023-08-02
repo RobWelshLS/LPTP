@@ -1,7 +1,12 @@
+import sys
+
+sys.path.append('..')
 from liquid_planner_timesheet.main import *
 
 
 def read_import_compare_file(compare_file):
+    """Read an import compare file and return entries in a list. These files contain the expected
+    entries in the correct format for comparison"""
     import_compare = []
     with open(compare_file, encoding='utf-8-sig') as compare_csv_file:
         time_entries_dict = csv.DictReader(compare_csv_file)
@@ -85,9 +90,8 @@ def test_create_import_lists_all_rearranged():
     assert import_lists[1] == import_compare_list_wn_all
 
 
-def test_export_field_verification(capsys):
+def test_export_field_verification():
     """Test to confirm the verify_export_fields function raises an exception if required fields are missing"""
     export_list_missing_fields = read_export_file('LP_Export_Test_Missing_Fields.csv')
-    verify_export_fields(export_list_missing_fields)
-    captured = capsys.readouterr()
-    assert captured.out == 'The LiquidPlanner export file is missing the Company field!\n'
+    export_list_error = verify_export_fields(export_list_missing_fields)
+    assert export_list_error is True
