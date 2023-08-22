@@ -19,30 +19,40 @@ def read_export_file(export_file):
 
 def write_westerville_file():
     """Write the Westerville import file if the westerville_import_list contains entries"""
-    wv_filename = f"LiquidPlannerTimesheetReadyForUpload{today.year}-{today.month}-{today.day}-WE.csv"
-    # wv_file = Path.home() / 'Downloads' / wv_filename
-    wv_file = import_file_dir + '/' + wv_filename
     if len(westerville_import_list) > 0:
-        with open(wv_file, 'w', newline='') as westerville_import_csv:
-            log_writer = csv.DictWriter(westerville_import_csv, fieldnames=import_fields)
+        wv_file = filedialog.asksaveasfilename(initialdir='W:/Product Development/1_Post/LiquidPlanner Timesheet '
+                                                          'Export/Accounting',
+                                               initialfile=f"LiquidPlannerTimesheetReadyForUpload{today.year}-"
+                                                           f"{today.month}-{today.day}-WE",
+                                               title='Write Westerville import file',
+                                               filetypes=(('csv files', '*.csv'), ('all files', '*.*')),
+                                               defaultextension='csv')
+        if wv_file:
+            with open(wv_file, 'w', newline='') as westerville_import_csv:
+                log_writer = csv.DictWriter(westerville_import_csv, fieldnames=import_fields)
 
-            log_writer.writeheader()
-            for entry in westerville_import_list:
-                log_writer.writerow(entry)
+                log_writer.writeheader()
+                for entry in westerville_import_list:
+                    log_writer.writerow(entry)
 
 
 def write_woburn_file():
     """Write the Woburn import file if the woburn_import_list contains entries"""
-    wn_filename = f"LiquidPlannerTimesheetReadyForUpload{today.year}-{today.month}-{today.day}-WN.csv"
-    # wn_file = Path.home() / 'Downloads' / wn_filename
-    wn_file = import_file_dir + '/' + wn_filename
     if len(woburn_import_list) > 0:
-        with open(wn_file, 'w', newline='') as woburn_import_csv:
-            log_writer = csv.DictWriter(woburn_import_csv, fieldnames=import_fields)
+        wn_file = filedialog.asksaveasfilename(initialdir='W:/Product Development/1_Post/LiquidPlanner Timesheet '
+                                                          'Export/Accounting',
+                                               initialfile=f"LiquidPlannerTimesheetReadyForUpload{today.year}-"
+                                                           f"{today.month}-{today.day}-WN",
+                                               title='Write Woburn import file',
+                                               filetypes=(('csv files', '*.csv'), ('all files', '*.*')),
+                                               defaultextension='csv')
+        if wn_file:
+            with open(wn_file, 'w', newline='') as woburn_import_csv:
+                log_writer = csv.DictWriter(woburn_import_csv, fieldnames=import_fields)
 
-            log_writer.writeheader()
-            for entry in woburn_import_list:
-                log_writer.writerow(entry)
+                log_writer.writeheader()
+                for entry in woburn_import_list:
+                    log_writer.writerow(entry)
 
 
 if __name__ == '__main__':
@@ -62,18 +72,6 @@ if __name__ == '__main__':
         westerville_import_list = import_lists[0]
         woburn_import_list = import_lists[1]
 
-        # Create the Epicor import files
-        import_file_dir = filedialog.askdirectory(initialdir='W:/Product Development/1_Post/LiquidPlanner Timesheet '
-                                                             'Export/Accounting', title='Select import file folder')
-        if import_file_dir:
-            write_westerville_file()
-            write_woburn_file()
-
-    # Test prints, to be deleted
-    # print(f"\nThis is the Westerville import list. The length is {len(westerville_import_list)} entries:")
-    # for row in westerville_import_list:
-    #     print(row)
-    #
-    # print(f"\nThis is the Woburn import list: The length is {len(woburn_import_list)} entries:")
-    # for row in woburn_import_list:
-    #     print(row)
+        # Create the import files
+        write_westerville_file()
+        write_woburn_file()
