@@ -20,13 +20,13 @@ def read_export_file(export_file):
 def write_westerville_file():
     """Write the Westerville import file if the westerville_import_list contains entries"""
     if len(westerville_import_list) > 0:
-        wv_file = filedialog.asksaveasfilename(initialdir='W:/Product Development/1_Post/LiquidPlanner Timesheet '
-                                                          'Export/Accounting',
-                                               initialfile=f"LiquidPlannerTimesheetReadyForUpload{today.year}-"
-                                                           f"{today.month}-{today.day}-WE",
-                                               title='Write Westerville import file',
-                                               filetypes=(('csv files', '*.csv'), ('all files', '*.*')),
-                                               defaultextension='csv')
+        wv_file = filedialog.asksaveasfilename(
+            initialdir=r"\\chewie\lakeshore\Product Development\1_Post\LiquidPlanner Timesheet Export\Accounting",
+            initialfile=f"LiquidPlannerTimesheetReadyForUpload{today.year}-"
+                        f"{today.month}-{today.day}-WE",
+            title='Write Westerville import file',
+            filetypes=(('csv files', '*.csv'), ('all files', '*.*')),
+            defaultextension='csv')
         if wv_file:
             with open(wv_file, 'w', newline='') as westerville_import_csv:
                 log_writer = csv.DictWriter(westerville_import_csv, fieldnames=import_fields)
@@ -39,13 +39,13 @@ def write_westerville_file():
 def write_woburn_file():
     """Write the Woburn import file if the woburn_import_list contains entries"""
     if len(woburn_import_list) > 0:
-        wn_file = filedialog.asksaveasfilename(initialdir='W:/Product Development/1_Post/LiquidPlanner Timesheet '
-                                                          'Export/Accounting',
-                                               initialfile=f"LiquidPlannerTimesheetReadyForUpload{today.year}-"
-                                                           f"{today.month}-{today.day}-WN",
-                                               title='Write Woburn import file',
-                                               filetypes=(('csv files', '*.csv'), ('all files', '*.*')),
-                                               defaultextension='csv')
+        wn_file = filedialog.asksaveasfilename(
+            initialdir=r"\\chewie\lakeshore\Product Development\1_Post\LiquidPlanner Timesheet Export\Accounting",
+            initialfile=f"LiquidPlannerTimesheetReadyForUpload{today.year}-"
+                        f"{today.month}-{today.day}-WN",
+            title='Write Woburn import file',
+            filetypes=(('csv files', '*.csv'), ('all files', '*.*')),
+            defaultextension='csv')
         if wn_file:
             with open(wn_file, 'w', newline='') as woburn_import_csv:
                 log_writer = csv.DictWriter(woburn_import_csv, fieldnames=import_fields)
