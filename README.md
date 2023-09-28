@@ -15,4 +15,18 @@ LiquidPlanner exports all time entries in a csv file. The file contains all data
 * Separate import files are generated for Westerville and Woburn.
 * An import file is not generated if there are no entries for a location. This means the program may be used to generate import files that are as small as a single entry. This is often needed when subsequent imports are required due to corrections or entries made after the initial import.
 
-### Installation and Use
+### Executable creation and installation
+Pyinstaller is used to create the executable from the script. To install the Pyinstaller package, run the following command:
+
+```
+pip install pyinstaller
+```
+
+To create the executable, navigate to \UtilitiesLiquidPlannerTimesheet\liquid_planner_timesheet and run the following command:
+
+```
+pyinstaller --onefile --name LPTimesheet main.py
+```
+This will create the build and dist folders and related files. The LPTimesheet.exe file is found in the dist folder.
+
+To install the executable, simply copy the LPTimesheet.exe file to the desired location on the target computer.
